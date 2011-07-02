@@ -7,7 +7,10 @@ class IHex(object):
     
     segbase = 0
     for line in lines:
-      t, a, d = ihex.parse_line(line.strip())
+      line = line.strip()
+      if not line: continue
+      
+      t, a, d = ihex.parse_line(line)
       if t == 0x00:
         ihex.insert_data(segbase + a, d)
       
@@ -80,7 +83,7 @@ class IHex(object):
   
   def parse_line(self, rawline):
     if rawline[0] != ":":
-      raise ValueError("Invalid start character (':')")
+      raise ValueError("Invalid line start character (%r)" % rawline[0])
     
     try:
       line = rawline[1:].decode("hex")
