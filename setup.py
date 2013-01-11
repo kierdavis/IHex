@@ -11,6 +11,7 @@ setup(
   description = "A Python library for reading and writing Intel Hex files",
   url = "https://github.com/kierdavis/IHex",
   keywords = "intel hex binary files",
+  test_suite = 'test_ihex',
   classifiers = ["Programming Language :: Python",
       "License :: Public Domain",
       "Operating System :: OS Independent",
