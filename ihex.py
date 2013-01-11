@@ -51,6 +51,13 @@ class IHex(object):
     self.areas = {}
     self.start = None
     self.mode = 8
+    self.row_bytes = 16
+
+  def set_row_bytes(self, row_bytes):
+      """Set output hex file row width (bytes represented per row)."""
+      if row_bytes < 1 or row_bytes > 0xff:
+          raise ValueError("Value out of range: (%r)" % row_bytes)
+      self.row_bytes = row_bytes
 
   def set_start(self, start=None):
     self.start = start
@@ -119,7 +126,7 @@ class IHex(object):
       segbase = 0
 
       while i < len(data):
-        chunk = data[i:i + 16]
+        chunk = data[i:i + self.row_bytes]
 
         addr = start
         newsegbase = segbase
@@ -146,8 +153,8 @@ class IHex(object):
 
         output += self.make_line(0x00, addr, chunk)
 
-        i += 16
-        start += 16
+        i += self.row_bytes
+        start += self.row_bytes
 
     if self.start is not None:
       if self.mode == 16:
