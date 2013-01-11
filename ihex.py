@@ -52,6 +52,30 @@ class IHex(object):
     self.start = None
     self.mode = 8
   
+  def extract_data(self, start=None, end=None):
+    if start is None:
+      start = 0
+    
+    if end is None:
+      end = 0
+      result = ""
+      
+      for addr, data in self.areas.iteritems():
+        if addr >= start:
+          end = max(end, addr + len(data))
+          result = result[:start] + data[start-addr:end-addr] + result[end:]
+      
+      return result
+    
+    else:
+      result = ""
+      
+      for addr, data in self.areas.iteritems():
+        if addr >= start and addr < end:
+          result = result[:start] + data[start-addr:end-addr] + result[end:]
+      
+      return result
+  
   def set_start(self, start=None):
     self.start = start
   
@@ -75,6 +99,7 @@ class IHex(object):
     
     else:
       data = self.areas[area]
+      # istart - iend + len(idata) + len(data)
       self.areas[area] = data[:istart-area] + idata + data[iend-area:]
   
   def calc_checksum(self, bytes):
@@ -114,7 +139,8 @@ class IHex(object):
   def write(self):
     output = ""
     
-    for start, data in self.areas.iteritems():
+    for start, data in sorted(self.areas.iteritems()):
+      #~ print start
       i = 0
       segbase = 0
       

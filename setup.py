@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
   name = "IHex",
-  version = "0.1.1",
+  version = "0.1.3",
   
   py_modules = ["ihex"],
   
